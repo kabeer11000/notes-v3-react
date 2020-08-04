@@ -1,13 +1,9 @@
 import React from 'react';
-import {makeStyles} from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import PropTypes from 'prop-types';
 import speak from "../../js/utils/speech/speak";
 import IconButton from "@material-ui/core/IconButton";
 import {Delete, VolumeUp} from '@material-ui/icons';
@@ -15,6 +11,7 @@ import deleteTodo from "../../js/main/delete-todo";
 import getTodos from "../../js/main/get-todos";
 import Divider from "@material-ui/core/Divider";
 import timeAgo from "../../js/utils/ui/timeago";
+import Paper from "@material-ui/core/Paper";
 
 function timeConverter(UNIX_timestamp) {
     var a = new Date(UNIX_timestamp * 1000);
@@ -68,7 +65,7 @@ export class Box extends React.Component {
     renderPosts = async () => {
         try {
             let posts = await getTodos();
-            console.log(posts)
+            console.log(posts);
             // this will re render the view with new data
             if (posts.length) {
                 this.setState({
@@ -81,8 +78,12 @@ export class Box extends React.Component {
                                         aria-controls="panel1a-content"
                                         id="panel1a-header"
                                     >
-                                        <Typography><small class="text-muted small text-truncate mb-2" style={{wordWrap: 'break-word', whiteSpace: 'pre-wrap'}}>About {timeAgo(note.date)}</small><br/>
-                                            <div className={'mt-2 white-space-nowrap1 1text-truncate'}>{this.check_if_null(note.title)}</div>
+                                        <Typography>
+                                            <small class="text-muted small text-truncate mb-2" style={{
+                                                wordWrap: 'break-word',
+                                                whiteSpace: 'pre-wrap'
+                                            }}>About {timeAgo(note.date)}</small><br/>
+                                            <div className={'mt-2'}>{this.check_if_null(note.title)}</div>
                                         </Typography>
                                     </AccordionSummary>
                                     <AccordionDetails>
@@ -110,13 +111,15 @@ export class Box extends React.Component {
                     })
                 });
             } else {
+                let x =
+                    <div className={"d-flex justify-content-center"}>
+                        <Paper square style={{marginTop: '20vh'}}
+                               className={"d-flex justify-content-center rounded-circle"} elevation={0}>
+                            <img style={{width: '10rem'}} src={'assets/not_found.gif'}/>
+                        </Paper>
+                    </div>;
                 this.setState({
-                    notes: function () {
-                        return (<div className="d-flex justify-content-between">
-                                <img src="assets/icons/kabeersnetwork.svg" style={{height: '5rem', width: 'auto'}}/>
-                            </div>
-                        )
-                    }
+                    notes: x,
                 });
             }
         } catch (err) {

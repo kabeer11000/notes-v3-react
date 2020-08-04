@@ -6,5 +6,9 @@ export const asyncLocalStorage = {
     getItem: async function (key) {
         await null;
         return localStorage.getItem(key);
+    },
+    removeItem: async function (key) {
+        await null;
+        return localStorage.removeItem(key);
     }
 };

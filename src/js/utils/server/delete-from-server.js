@@ -1,10 +1,13 @@
 import ping from '../ping';
 import {asyncLocalStorage} from "../../asyncLocalStorage";
 
-function deleteNote (dateTime, user_id, note_id) {
-    localStorage.removeItem('note-' + dateTime);
+function deleteNote(dateTime, user_id, note_id) {
+    asyncLocalStorage.removeItem('note-' + dateTime).then(() => {
+        deleteFromServer(dateTime, user_id, note_id);
+    });
 }
-async function deleteFromServer (datetime, user_id = user_id, note_id) {
+
+async function deleteFromServer(datetime, user_id, note_id) {
     if (!await ping()) {
         let del_arr = JSON.parse(localStorage.getItem('delete-list'));
         del_arr.push({
@@ -27,7 +30,6 @@ async function deleteFromServer (datetime, user_id = user_id, note_id) {
     } else {
         console.warn('Cannot Delete No Connection!')
     }
-    deleteNote(datetime);
 //    $('.' + note_id).remove();
 //    Snackbar({message: "Deleted!"});
 }

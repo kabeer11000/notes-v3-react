@@ -7,8 +7,9 @@ import getFromServer from "../../js/utils/server/get-from-server";
 import speak from "../../js/utils/speech/speak";
 import IconButton from "@material-ui/core/IconButton";
 import {Delete, VolumeUp} from '@material-ui/icons';
-import {deleteFromServer, deleteNote} from "../../js/utils/server/delete-from-server";
+import {deleteNote} from "../../js/utils/server/delete-from-server";
 import {makeStyles} from "@material-ui/core/styles";
+import ContentEditable from "../ContentEditable/ContentEditable";
 
 const useStyles = makeStyles((theme) => ({
     content: {
@@ -20,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
 
 export class Box extends React.Component {
     contentEditable_paper(e) {
-        console.log(e)
         e.contentEditable = true;
         console.log(e.closest('.note-heading'));
 //    e.closest('h4').remove();
@@ -29,10 +29,12 @@ export class Box extends React.Component {
             document.getElementById(`#${e}`).closest('h3').remove();
         */
     }
+
     listen_note(c) {
         speak(c, () => {
         })
     }
+
 
     delete_note(d) {
         deleteNote(d.date, '123456', d.noteId);
@@ -42,13 +44,22 @@ export class Box extends React.Component {
 
     state = {
         preloader: 'd-block',
+        showContentEditable: false,
     };
+
     componentDidMount() {
         this.state.preloader = 'd-none';
         this.renderPosts();
     }
 
- //   classes = useStyles();
+    c_e_helper(note) {
+        this.setState({
+            showContentEditable: true,
+        });
+        //render(ContentEditable({content: note.content, date: note.date, uniqid: note.uniqid}));
+    }
+
+    //   classes = useStyles();
     renderPosts = async () => {
         try {
             let posts = await getFromServer('123456');
@@ -57,40 +68,47 @@ export class Box extends React.Component {
             if (posts.length) {
                 this.setState({
                     notes: posts.map((note, i) => {
+                        let nc = note.content;
                         let heading = note.content.split('\n')[0]; // lines is an array of strings
                         note.content = note.content.substring(heading.length);
                         return (
-                            <Paper className={"col-md-4 mb-3 mr-3 text-body p-0 text-break " + note.uniqid} >
-                                <p className="header d-flex p-0 justify-content-around">
-                                    <span className="d-none id">{note.uniqid}</span>
-                                    <span className="date p-3">{note.date}</span>
-                                    <IconButton onClick={() => {
-                                        this.listen_note(heading + '\n' + note.content)
-                                    }} color={'primary'}>
-                                        <VolumeUp/>
-                                    </IconButton>
-                                    <IconButton color={'primary'} onClick={(e) => {
-                                        this.delete_note({date: note.date, noteId: note.uniqid, e: e})
+                            <div key={i} className={'col-md-4 p-0 m-0'}>
+                                <Paper onDoubleClick={() => {
+                                    return (<ContentEditable content={nc} date={note.date} uniqid={note.uniqid}/>);
+                                }}
+                                       className={"col-md-4 mb-3 mr-2 ml-1 text-body p-0 text-break " + note.uniqid}>
+                                    <p className="header d-flex p-0 justify-content-around">
+                                        <span className="d-none id">{note.uniqid}</span>
+                                        <span className="date p-3">{note.date}</span>
+                                        <IconButton onClick={() => {
+                                            this.listen_note(heading + '\n' + note.content)
+                                        }} color={'primary'}>
+                                            <VolumeUp/>
+                                        </IconButton>
+                                        <IconButton color={'primary'} onClick={(e) => {
+                                            this.delete_note({date: note.date, noteId: note.uniqid, e: e})
+                                        }}>
+                                            <Delete/>
+                                        </IconButton>
+                                    </p>
+                                    <div class="note-inner p-2 m-3 text-break" id={note.uniqid} onClick={() => {
                                     }}>
-                                        <Delete/>
-                                    </IconButton>
-                                </p>
-                                <div class="note-inner p-2 m-3 text-break" id={note.uniqid} onClick={()=>{}}>
-                                    <h4 class="note-heading text-break">{heading}</h4>
-                                    <div class="note-content text-break">{note.content}</div>
-                                </div>
-                            </Paper>
+                                        <h4 class="note-heading text-break">{heading}</h4>
+                                        <div class="note-content text-break">{note.content}</div>
+                                    </div>
+
+                                </Paper>
+                            </div>
                         )
                     })
                 });
             } else {
+                let x = <div className="d-flex justify-content-between">
+                    <img src="assets/icons/kabeersnetwork.svg" style={{height: '5rem', width: 'auto'}}/>
+                </div>;
+
                 this.setState({
-                    notes: function () {
-                        return (<div className="d-flex justify-content-between">
-                                <img src="assets/icons/kabeersnetwork.svg" style={{height: '5rem', width: 'auto'}}/>
-                            </div>
-                        )
-                    }
+                    notes: x
                 });
             }
         } catch (err) {
@@ -106,7 +124,8 @@ export class Box extends React.Component {
                         <div className={'d-flex justify-content-center'}>
                             <svg className="spinner_" width="65px" height="65px" viewBox="0 0 66 66"
                                  xmlns="http://www.w3.org/2000/svg">
-                                <circle className="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"/>
+                                <circle className="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33"
+                                        cy="33" r="30"/>
                             </svg>
                         </div>
                     </div>
@@ -116,6 +135,7 @@ export class Box extends React.Component {
         );
     }
 }
+
 function refresh_() {
     this.forceUpdate();
 }

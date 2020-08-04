@@ -5,85 +5,64 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import {Add, Close, Mic, Save} from '@material-ui/icons';
+import {Close, Mic, Save} from '@material-ui/icons';
 import Slide from '@material-ui/core/Slide';
-import Fab from "@material-ui/core/Fab";
-import uniqid from "../../js/utils/uniqid";
 import saveNote from "../../js/main/save-notes";
 import {refresh_} from "../Box/Box";
 import {saveDraft} from "../../js/utils/local/draft";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import PropTypes from "prop-types";
 
-const useStyles = makeStyles((theme) => ({
-    appBar: {
-        position: 'relative',
-    },
-    title: {
-        marginLeft: theme.spacing(2),
-        flex: 1,
-    },
-    input1: {
-        height: '100rem'
-    },
-}));
+export default function ContentEditable(props) {
+    const useStyles = makeStyles((theme) => ({
+        appBar: {
+            position: 'relative',
+        },
+        title: {
+            marginLeft: theme.spacing(2),
+            flex: 1,
+        },
+        input1: {
+            height: '100rem'
+        },
+    }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
+    const Transition = React.forwardRef(function Transition(props, ref) {
+        return <Slide direction="up" ref={ref} {...props} />;
+    });
 
-function reseize_k(e) {
-    e.target.addEventListener('keydown', autosize);
-
-}
-
-function autosize() {
-    var el = this;
-    setTimeout(function () {
-        el.style.cssText = 'height:auto; padding:0';
-        // for box-sizing other than "content-box" use:
-        // el.style.cssText = '-moz-box-sizing:content-box';
-        el.style.cssText = 'height:' + el.scrollHeight + 'px';
-    }, 0);
-}
-export default function FullScreenDialog() {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
-    const [value, setValue] = React.useState('Controlled');
+    const [open, setOpen] = React.useState(true);
+    //const [value, setValue] = React.useState('Controlled');
     let note_s = {};
-    note_s.textarea = undefined;
+    note_s.textarea = props.content;
+    note_s.date = props.date;
+    note_s.uniqid = props.uniqid;
 
-    const handleChange = (event) => {/*
-        if ((event.target.value.split(/\n/g)[0].match(/\n/g)||[]).length){
-            event.target.value = `-${event.target.value.split(/\n/g)[0]}`;
-        }*/
+    const handleChange = (event) => {
         note_s.textarea = event.target.value;
         document.getElementById('c_').innerHTML = `${note_s.textarea.length} / 1600`
     };
     const handleClickOpen = (m = true) => {
-        if (localStorage.getItem('draft')){
-            note_s.textarea = localStorage.getItem('draft');
-//            handleChange({target:{value:localStorage.getItem('draft')}});
-        }
         setOpen(m);
     };
     const handleSave = () => {
         let noteContentJSON = {
             content: note_s.textarea,
-            uniqid: uniqid(),
+            uniqid: note_s.uniqid,
         };
         if (note_s.textarea.length) {
-            saveNote(new Date().toLocaleString(), noteContentJSON, () => {
+            saveNote(note_s.date, noteContentJSON, () => {
                 console.log('Fuck u donna');
                 handleClickOpen(false);
             });
-        }else{
+        } else {
             console.log('Empty Note Discarded');
             handleClickOpen(false);
         }
     };
     const handleClose = () => {
-        if (note_s.textarea !== undefined || null) {
+        if (note_s.textarea.length) {
             saveDraft(note_s.textarea).then(() => {
                 setOpen(false);
             });
@@ -91,6 +70,7 @@ export default function FullScreenDialog() {
             setOpen(false);
         }
     };
+
     function HideOnScroll(props) {
         const {children, window} = props;
         // Note that you normally won't need to set the window ref as useScrollTrigger
@@ -116,15 +96,6 @@ export default function FullScreenDialog() {
 
     return (
         <div>
-            <HideOnScroll>
-                <div className="fab-btn_k">
-                    <Fab variant="extended" color={"primary"}
-                         onClick={handleClickOpen}>
-                        <Add className={classes.extendedIcon}/>
-                        New
-                    </Fab>
-                </div>
-            </HideOnScroll>
             <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
                 <AppBar className={classes.appBar}>
                     <Toolbar>
@@ -153,9 +124,10 @@ export default function FullScreenDialog() {
                                 className="form-control textarea main-textarea char-counter"
                                 placeholder="Create a new note by typing or using voice recognition."
                                 data-autosuggest_index="1"/>
-                                <div class="bg-light px-2 py-1 position-fixed charar_c" id="c_" style={{right:'0rem', bottom:'1rem', opacity: '70%'}}>
-                                    0 / 1600
-                                </div>
+                            <div class="bg-light px-2 py-1 position-fixed charar_c" id="c_"
+                                 style={{right: '0rem', bottom: '1rem', opacity: '70%'}}>
+                                0 / 1600
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -163,11 +135,3 @@ export default function FullScreenDialog() {
         </div>
     );
 }
-/*                            <textarea
-                                onFocus={(e)=>{reseize_k(e)}}
-                                maxLength="1600"
-                                id="note-textarea"
-                                className="form-control textarea main-textarea char-counter"
-                                placeholder="Create a new note by typing or using voice recognition."
-                                data-autosuggest_index="1"/>
-*/

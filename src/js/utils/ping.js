@@ -1,16 +1,17 @@
-/*let ping = async () => {
+import fetch from "./fetchWithTimeout";
+
+let ping = async () => {
     let status = false;
     if (navigator.onLine) {
-        let res = await $.ajax({
-            url: "https://cdn.jsdelivr.net/gh/kabeer11000/notes/ping.txt",
-            async: true,
+        await fetch("https://cdn.jsdelivr.net/gh/kabeer11000/notes/ping.txt", {}, 5000).then((v) => {
+            if (v.ok) {
+                status = true;
+            }
         });
-        res != null || undefined ? status = true : "";
     }
     return status;
-};*/
-
+};/*
 async function ping() {
     return navigator.onLine;
-}
+}*/
 export default ping;
