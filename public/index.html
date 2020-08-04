@@ -4,6 +4,43 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" href="vendor/bootstrap/dist/v5/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+
+      .main-textarea{
+        height:88vh;
+        border:none!important;
+        overflow: hidden;
+        overflow-wrap: break-word;
+        outline-color: transparent;
+        resize:none!important;
+      }textarea:hover,
+       input:hover,
+       textarea:active,
+       input:active,
+       textarea:focus,
+       input:focus,
+       button:focus,
+       button:active,
+       button:hover,
+       label:focus,
+       .btn:active,
+       .btn.active
+       {
+         outline:0 !important;
+         -webkit-appearance:none!important;
+         box-shadow: none !important;
+       }
+      .material-divider {
+        border: 0.2px solid #F3F3F3 !important;
+      }
+      .charar_c{
+        border-radius: 2rem 0 0 2rem;
+      }
+    </style>
+    <link rel="stylesheet" href="vendor/mat-icons/material-icons.css">
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
@@ -24,7 +61,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>Kabeers Notes</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -39,5 +76,18 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script src="vendor/bootstrap/dist/v5/popper.min.js"></script>
+    <script src="vendor/bootstrap/dist/v5/bootstrap.min.js"></script>
+  <script src="https://kabeersnotes.herokuapp.com/vendor/kabeers/pulltorefresh/pulltorefresh.umd.min.js"></script>
+  <script>
+    PullToRefresh.init({
+      mainElement: '#root',
+      onRefresh: function () {
+        setTimeout(function () {
+          refresh();
+        }, 500);
+      }
+    });
+  </script>
   </body>
 </html>
