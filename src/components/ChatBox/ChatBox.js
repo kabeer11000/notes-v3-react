@@ -144,6 +144,7 @@ class ChatBox extends React.PureComponent {
         }
     */
 
+    //TODO Consult public/auth/words_generate.php for words Generation
     tempWordsList = {
       "thr": "threat",
       "wid": "wide",
