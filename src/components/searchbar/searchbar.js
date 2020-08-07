@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import {ArrowBack, Delete, Search, Sync, VolumeUp} from "@material-ui/icons";
+import {AccountCircle, ArrowBack, Delete, Search, VolumeUp} from "@material-ui/icons";
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import Slide from '@material-ui/core/Slide';
 import PropTypes from 'prop-types';
@@ -16,6 +16,11 @@ import Fuse from "fuse.js";
 import speak from "../../js/utils/speech/speak";
 import {deleteNote} from "../../js/utils/server/delete-from-server";
 import getNotesFromLocalStorage from "../../js/utils/local/getNotesFromLocalStorage";
+import Popover from "@material-ui/core/Popover";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import getTodos from "../../js/main/get-todos";
+import deleteTodo from "../../js/main/delete-todo";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -62,6 +67,12 @@ export default function CustomizedInputBase(props) {
         console.log(d.e.target.parentNode.parentNode.parentNode.parentNode.closest('.col-md-4').remove())
     }
 
+    let method_ = undefined;
+    if (props.context_ === 0) {
+        method_ = getNotesFromLocalStorage();
+    } else {
+        getTodos().then((value => method_ = value));
+    }
     const search_data = {};
 
     async function Search_onFocus() {
@@ -102,45 +113,83 @@ export default function CustomizedInputBase(props) {
                 },
                 "date",
                 {
-                    name: 'uniqid',
-                    weight: 0.5
+                    name: 'title',
+                    weight: 1.5
+                },
+                {
+                    name: 'body',
+                    weight: 1.5
+                },
+                {
+                    name: 'label',
+                    weight: 1.5
                 },
             ]
         };
-        search_data.fuse = new Fuse(getNotesFromLocalStorage(), options);
+        search_data.fuse = new Fuse(method_, options);
         if (e.target.value && search_data.fuse) {
             const search_val = search_data.fuse.search(e.target.value.toLowerCase());
             let search_html = undefined;
             if (search_val.length > 0) {
                 search_val.map((note, i) => {
                     note = note.item;
-                    let heading = note.content.split('\n')[0]; // lines is an array of strings
-                    note.content = note.content.substring(heading.length);
-                    search_html =
-                        <div key={i} className={'col-md-4 p-0 m-0'}>
-                            <Paper className={"col-md-4 mb-3 mr-2 ml-1 text-body p-0 text-break " + note.uniqid}>
-                                <p className="header d-flex p-0 justify-content-around">
-                                    <span className="d-none id">{note.uniqid}</span>
-                                    <span className="date p-3">{note.date}</span>
-                                    <IconButton onClick={() => {
-                                        listen_note(heading + '\n' + note.content)
-                                    }} color={'primary'}>
-                                        <VolumeUp/>
-                                    </IconButton>
-                                    <IconButton color={'primary'} onClick={(e) => {
-                                        delete_note({date: note.date, noteId: note.uniqid, e: e})
+                    if (props.context_ === 0) {
+                        let heading = note.content.split('\n')[0]; // lines is an array of strings
+                        note.content = note.content.substring(heading.length);
+                        search_html =
+                            <div key={i} className={'col-md-4 p-0 m-0'}>
+                                <Paper className={"col-md-4 mb-3 mr-2 ml-1 text-body p-0 text-break" + note.uniqid}>
+                                    <p className="header d-flex p-0 justify-content-around">
+                                        <span className="d-none id">{note.uniqid}</span>
+                                        <span className="date p-3">{note.date}</span>
+                                        <IconButton onClick={() => {
+                                            listen_note(heading + '\n' + note.content)
+                                        }} color={'primary'}>
+                                            <VolumeUp/>
+                                        </IconButton>
+                                        <IconButton color={'primary'} onClick={(e) => {
+                                            delete_note({date: note.date, noteId: note.uniqid, e: e})
+                                        }}>
+                                            <Delete/>
+                                        </IconButton>
+                                    </p>
+                                    <div className="note-inner p-2 m-3 text-break" id={note.uniqid} onClick={() => {
                                     }}>
-                                        <Delete/>
-                                    </IconButton>
-                                </p>
-                                <div className="note-inner p-2 m-3 text-break" id={note.uniqid} onClick={() => {
-                                }}>
-                                    <h4 className="note-heading text-break">{heading}</h4>
-                                    <div className="note-content text-break">{note.content}</div>
-                                </div>
+                                        <h4 className="note-heading text-break">{heading}</h4>
+                                        <div className="note-content text-break">{note.content}</div>
+                                    </div>
 
-                            </Paper>
-                        </div>;
+                                </Paper>
+                            </div>;
+                    } else {
+                        console.log(note);
+                        search_html =
+                            <div key={i} className={'col-md-4 p-0 m-0'}>
+                                <Paper className={"col-md-4 mb-3 mr-2 ml-1 text-body p-0 text-break " + note.uniqid}>
+                                    <p className="header d-flex p-0 justify-content-around">
+                                        <span className="d-none id">{note.uniqid}</span>
+                                        <span className="date p-3">{note.date.toString()}</span>
+                                        <IconButton onClick={() => {
+                                            listen_note(note.title + '\n' + note.body)
+                                        }} color={'primary'}>
+                                            <VolumeUp/>
+                                        </IconButton>
+                                        <IconButton color={'primary'} onClick={(e) => {
+                                            deleteTodo(note.date);
+                                        }}>
+                                            <Delete/>
+                                        </IconButton>
+                                    </p>
+                                    <div className="note-inner p-2 m-3 text-break" id={note.uniqid} onClick={() => {
+                                    }}>
+                                        <h4 className="note-heading text-break">{note.title}</h4>
+                                        <div className="note-content text-break">{note.body}</div>
+                                    </div>
+
+                                </Paper>
+                            </div>;
+
+                    }
                 });
                 search_valChange(search_html);
             } else {
@@ -198,6 +247,20 @@ export default function CustomizedInputBase(props) {
     const modal_Close = () => {
         modal_setOpen(false);
     };
+    const [popover_anchorEl, popover_setAnchorEl] = React.useState(null);
+    let style_ = useStyles({
+        transform: `translate(100px, 0px)`,
+    });
+    const popover_handleClick = (event) => {
+        popover_setAnchorEl(event.currentTarget);
+    };
+
+    const popover_handleClose = () => {
+        popover_setAnchorEl(null);
+    };
+
+    const popover_open = Boolean(popover_anchorEl);
+    const popover_id = popover_open ? 'simple-popover' : undefined;
     return (
         <div>
             <HideOnScroll {...props}>
@@ -214,11 +277,33 @@ export default function CustomizedInputBase(props) {
                                 inputProps={{'aria-label': 'Search Kabeers Notes'}}
                             />
                             <Divider className={classes.divider} orientation="vertical"/>
-                            <IconButton onClick={() => {
-                                rerender_()
-                            }} color="primary" className={classes.iconButton} aria-label="directions">
-                                <Sync/>
+                            <IconButton onClick={popover_handleClick}>
+                                <AccountCircle/>
                             </IconButton>
+                            <Popover
+                                id={popover_id}
+                                open={popover_open}
+                                onClose={popover_handleClose}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                className={'p-3 w-100'}
+                                style={style_}
+                            >
+                                <Paper className={'text-center w-100 p-3'}>
+                                    <AccountCircle/>
+                                    <Typography variant={'h6'} className={'my-1'}>Kabeer Jaffri</Typography>
+                                    <Typography variant={'p'} muted
+                                                className={'my-1 text-muted'}>Kabeer11000@gmail.com</Typography>
+                                    <Divider className={'my-3'}/>
+                                    <Button variant={'outlined'} className={'btn my-3'}><small>SIGN OUT</small></Button>
+                                </Paper>
+                            </Popover>
                         </Paper>
                     </Toolbar>
                 </AppBar>

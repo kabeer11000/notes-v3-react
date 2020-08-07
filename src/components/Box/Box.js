@@ -103,9 +103,16 @@ export class Box extends React.Component {
                     })
                 });
             } else {
-                let x = <div className="d-flex justify-content-between">
-                    <img src="assets/icons/kabeersnetwork.svg" style={{height: '5rem', width: 'auto'}}/>
-                </div>;
+                let x =
+                    <div className={'w-100 h-100'}>
+                        <div className={"d-flex justify-content-center"}>
+                            <div square style={{marginTop: '15vh', backgroundColor: 'transparent'}}
+                                 className={"d-flex justify-content-center rounded-circle"} elevation={0}>
+                                <img style={{width: '10rem', opacity: '80%'}} src={'assets/icons/ic_launcher.png'}/>
+                            </div>
+                        </div>
+                        <div className={'text-center text-muted'}>Notes Will Appear Here!</div>
+                    </div>;
 
                 this.setState({
                     notes: x

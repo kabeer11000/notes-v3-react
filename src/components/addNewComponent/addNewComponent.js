@@ -5,7 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import {Add, Close, Mic, Save} from '@material-ui/icons';
+import {Add, Close, Mic, MicOff, Save} from '@material-ui/icons';
 import Slide from '@material-ui/core/Slide';
 import Fab from "@material-ui/core/Fab";
 import uniqid from "../../js/utils/uniqid";
@@ -14,6 +14,9 @@ import {refresh_} from "../Box/Box";
 import {saveDraft} from "../../js/utils/local/draft";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import PropTypes from "prop-types";
+import record from "../../js/utils/record/record";
+import getPredictiveText from "../../js/utils/ui/predictiveText";
+import ChatBox from "../ChatBox/ChatBox";
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -49,23 +52,72 @@ function autosize() {
 export default function FullScreenDialog() {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-    const [value, setValue] = React.useState('Controlled');
+    const [title, setTitle] = React.useState('Add New');
+    const [chars, setChars] = React.useState('0');
     let note_s = {};
     note_s.textarea = undefined;
-
+    note_s.smartCompose = [];
     const handleChange = (event) => {/*
         if ((event.target.value.split(/\n/g)[0].match(/\n/g)||[]).length){
             event.target.value = `-${event.target.value.split(/\n/g)[0]}`;
         }*/
         note_s.textarea = event.target.value;
-        document.getElementById('c_').innerHTML = `${note_s.textarea.length} / 1600`
+        //document.getElementById('c_').innerHTML = `${note_s.textarea.length} / 1600`
     };
     const handleClickOpen = (m = true) => {
-        if (localStorage.getItem('draft')){
+        if (localStorage.getItem('draft')) {
             note_s.textarea = localStorage.getItem('draft');
 //            handleChange({target:{value:localStorage.getItem('draft')}});
         }
         setOpen(m);
+    };
+    //const {Component} = React;
+    const textAreaCompRefs = React.createRef();
+    const handleValChange = (v) => {
+        console.log(v);
+        //document.getElementById('note-textarea').value = v;
+        note_s.textarea = v;
+        textAreaCompRefs.current.logMic(v);
+    };
+    /*    getPredictiveText().then((x)=>{
+            note_s.smartCompose = x;
+        });
+    */
+    const initSmartCompose = () => {
+        let smartCompose_settings = undefined;
+        const setSmartCompose = () => {
+            null == localStorage.getItem("smartcompose") ? localStorage.setItem("smartcompose", JSON.stringify("true")) : (smartCompose_settings = JSON.parse(JSON.parse(localStorage.getItem("smartcompose"))));
+        };
+        setSmartCompose();
+        if (smartCompose_settings) {
+            getPredictiveText().then(() => {
+
+            });
+
+        }
+    };
+
+    async function updateChars(v) {
+        setChars(v);
+    }
+
+    //const [btnOnclick, setbtnOnclick] = React.useState(speech_recog.micOn);
+    let speech_recog = {
+        noteContent: '',
+        recognition: record(handleValChange),
+        micOn: function (e) {
+            e.target.onClick = speech_recog.micOff;
+            speech_recog.recognition.start();
+            // setbtnOnclick(speech_recog.micOff);
+        },
+        micOff: function (e) {
+
+//            chatBoxElement_.logMic('sex');
+//            console.log(e.target.parentNode);
+//            e.target.onClick = speech_recog.micOn;
+            // setbtnOnclick(speech_recog.micOn);
+            speech_recog.recognition.stop();
+        }
     };
     const handleSave = () => {
         let noteContentJSON = {
@@ -114,6 +166,17 @@ export default function FullScreenDialog() {
         window: PropTypes.func,
     };
 
+    function setTitleFunc(v) {
+        setTitle(v);
+    }
+
+    function logSmartCompose(v) {
+        document.getElementById('note-textarea').value = v.html;
+        note_s.textarea = v.html;
+        console.log(v);
+        document.getElementById('c_').innerHTML = `${note_s.textarea.length} / 1600`
+    }
+
     return (
         <div>
             <HideOnScroll>
@@ -131,10 +194,13 @@ export default function FullScreenDialog() {
                         <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
                             <Close/>
                         </IconButton>
-                        <Typography variant="h6" className={classes.title}>
-                            Add New
+                        <Typography variant="h6" className={`${classes.title} text-truncate`}>
+                            {title}
                         </Typography>
-                        <IconButton autoFocus color="inherit" onClick={handleSave}>
+                        <IconButton autoFocus color="inherit" onClick={speech_recog.micOff}>
+                            <MicOff/>
+                        </IconButton>
+                        <IconButton autoFocus color="inherit" onClick={speech_recog.micOn}>
                             <Mic/>
                         </IconButton>
                         <IconButton autoFocus color="inherit" onClick={handleSave}>
@@ -145,17 +211,14 @@ export default function FullScreenDialog() {
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-12 px-0">
-                            <textarea
-                                value={note_s.textarea}
-                                onChange={handleChange}
-                                maxLength="1600"
-                                id="note-textarea"
-                                className="form-control textarea main-textarea char-counter"
-                                placeholder="Create a new note by typing or using voice recognition."
-                                data-autosuggest_index="1"/>
-                                <div class="bg-light px-2 py-1 position-fixed charar_c" id="c_" style={{right:'0rem', bottom:'1rem', opacity: '70%'}}>
-                                    0 / 1600
-                                </div>
+
+                            <ChatBox ref={textAreaCompRefs}
+                                     callback={logSmartCompose} titleSet={setTitleFunc} chars={updateChars}/>
+
+                            <div class="bg-light px-2 py-1 position-fixed charar_c" id="c_"
+                                 style={{right: '0rem', bottom: '1rem', opacity: '70%'}}>
+                                {chars} / 1600
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -170,4 +233,28 @@ export default function FullScreenDialog() {
                                 className="form-control textarea main-textarea char-counter"
                                 placeholder="Create a new note by typing or using voice recognition."
                                 data-autosuggest_index="1"/>
-*/
+
+                                haystack={note_s.smartCompose}
+                                onChange={(e)=>{setValue(e.currentTarget.value)}}
+                                value={value}
+                                onMatch={v => console.log(v)}
+                                ignoreCase={true}
+
+
+<AutoComplete
+      id="simple-autocomplete-3"
+      label="Inline Autocomplete"
+      placeholder="Apple"
+      data={fruits}
+      autoComplete="inline"
+    />
+    npm install --save-dev node-sass
+                            <textarea
+                                value={note_s.textarea}
+                                onChange={handleChange}
+                                maxLength="1600"
+                                id={'note-textarea'}
+                                className="form-control textarea main-textarea char-counter"
+                                placeholder="Create a new note by typing or using voice recognition."
+                                data-autosuggest_index="1"/>
+                                */

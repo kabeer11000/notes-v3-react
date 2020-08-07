@@ -1,0 +1,10 @@
+.TodoChips {
+}
+
+.scrollmenu {
+    display: inline-flex !important;
+    overflow: auto !important;
+    white-space: nowrap !important;
+    max-width: 18rem;
+    overflow-scrolling: auto;
+}

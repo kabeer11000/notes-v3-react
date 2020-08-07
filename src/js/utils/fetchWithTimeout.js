@@ -3,6 +3,6 @@ export default function (url, options, timeout = 7000) {
         fetch(url, options),
         new Promise((_, reject) =>
             setTimeout(() => reject(new Error('timeout')), timeout)
-        )
+        ).catch(e => console.log(e))
     ]);
 }

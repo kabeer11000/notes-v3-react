@@ -8,10 +8,10 @@ import speak from "../../js/utils/speech/speak";
 import IconButton from "@material-ui/core/IconButton";
 import {Delete, VolumeUp} from '@material-ui/icons';
 import deleteTodo from "../../js/main/delete-todo";
-import getTodos from "../../js/main/get-todos";
+import getTodos, {getTodosByLabel} from "../../js/main/get-todos";
 import Divider from "@material-ui/core/Divider";
 import timeAgo from "../../js/utils/ui/timeago";
-import Paper from "@material-ui/core/Paper";
+import ToDoChips from "../TodoChips/TodoChips";
 
 function timeConverter(UNIX_timestamp) {
     var a = new Date(UNIX_timestamp * 1000);
@@ -33,10 +33,15 @@ function parseDate(input) {
 }
 
 export class Box extends React.Component {
+
     listen_note(c) {
         speak(c, () => {
         })
     }
+
+    todosArray = {
+        array_: [],
+    };
 
     delete_note(d) {
         deleteTodo(d.date);
@@ -50,8 +55,11 @@ export class Box extends React.Component {
 
     componentDidMount() {
         this.state.preloader = 'd-none';
-        this.renderPosts();
+        getTodos().then(value => {
+            this.renderPosts(value);
+        })
     }
+
 
     check_if_null(a) {
         if (a !== undefined || null || '') {
@@ -61,10 +69,21 @@ export class Box extends React.Component {
         }
     }
 
-
-    renderPosts = async () => {
+    refresh = () => {
+        getTodos().then(value => {
+            this.renderPosts(value);
+        })
+    };
+    handleChip_ = (v) => {
+        getTodosByLabel(v).then(value => {
+            if (value !== null) {
+                this.renderPosts(value);
+                console.log(value);
+            }
+        });
+    };
+    renderPosts = async (posts) => {
         try {
-            let posts = await getTodos();
             console.log(posts);
             // this will re render the view with new data
             if (posts.length) {
@@ -112,11 +131,14 @@ export class Box extends React.Component {
                 });
             } else {
                 let x =
-                    <div className={"d-flex justify-content-center"}>
-                        <Paper square style={{marginTop: '20vh'}}
-                               className={"d-flex justify-content-center rounded-circle"} elevation={0}>
-                            <img style={{width: '10rem'}} src={'assets/not_found.gif'}/>
-                        </Paper>
+                    <div className={'w-100 h-100'}>
+                        <div className={"d-flex justify-content-center"}>
+                            <div square style={{marginTop: '15vh', backgroundColor: 'transparent'}}
+                                 className={"d-flex justify-content-center rounded-circle"} elevation={0}>
+                                <img style={{width: '10rem', opacity: '80%'}} src={'assets/icons/ic_launcher.png'}/>
+                            </div>
+                        </div>
+                        <div className={'text-center text-muted'}>Todos Will Appear Here!</div>
                     </div>;
                 this.setState({
                     notes: x,
@@ -127,6 +149,7 @@ export class Box extends React.Component {
         }
     };
 
+
 //onClick={(e) => this.contentEditable_paper(e.target)}
     render() {
         return (
@@ -136,21 +159,20 @@ export class Box extends React.Component {
                         <div className={'d-flex justify-content-center'}>
                             <svg className="spinner_" width="65px" height="65px" viewBox="0 0 66 66"
                                  xmlns="http://www.w3.org/2000/svg">
-                                <circle className="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"/>
+                                <circle className="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33"
+                                        cy="33" r="30"/>
                             </svg>
                         </div>
                     </div>
-
+                    <ToDoChips chip_val={this.handleChip_} chip_blur={this.refresh}/>
                     {this.state.notes}
                 </div>
             </div>
         );
     }
+
 }
 
-function refresh_() {
-    this.forceUpdate();
-}
 
 Box.propTypes = {};
 

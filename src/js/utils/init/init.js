@@ -59,7 +59,7 @@ const saveToServer = async () => {
                                 uniqid: data.uniqid,
                             });
                         }
-                        await localStorage.setItem('save-list', JSON.stringify(save_arr));
+                        await localStorage.setItem('save-list', JSON.stringify([]));
                     } else {
                         await ajaxSave(data);
                     }//Else Statement
