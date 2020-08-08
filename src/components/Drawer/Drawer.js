@@ -10,6 +10,7 @@ import MailIcon from "@material-ui/icons/Mail";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 import Hidden from "@material-ui/core/Hidden";
+import Link from "react-router-dom/modules/Link";
 
 
 const drawerWidth = 240;
@@ -51,8 +52,10 @@ function Drawer(props) {
             <Divider/>
             <List>
                 <ListItem button>
-                    <ListItemIcon><Settings/></ListItemIcon>
-                    <ListItemText primary={'Settings'}/>
+                    <Link to={'/settings'}>
+                        <ListItemIcon><Settings/></ListItemIcon>
+                        <ListItemText primary={'Settings'}/>
+                    </Link>
                 </ListItem>
             </List>
             <Divider/>

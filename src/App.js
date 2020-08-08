@@ -6,17 +6,21 @@ import SignIn from "./components/auth/SignIn";
 import SignUp from "./components/auth/SignUp";
 import SettingsComponent from "./components/Settings/Settings";
 import './serviceWorker';
+import {SnackbarProvider} from "notistack";
 
 function App(props) {
     return (
-        <Router>
-            <Switch>
-                <Route path={'/login'} component={SignIn}/>
-                <Route path={'/signup'} component={SignUp}/>
-                <Route path={'/settings'} component={SettingsComponent}/>
-                <Route path={'/'} component={MainComponent}/>
-            </Switch>
-        </Router>
+
+        <SnackbarProvider maxSnack={3}>
+            <Router>
+                <Switch>
+                    <Route path={'/login'} component={SignIn}/>
+                    <Route path={'/signup'} component={SignUp}/>
+                    <Route path={'/settings'} component={SettingsComponent}/>
+                    <Route path={'/'} component={MainComponent}/>
+                </Switch>
+            </Router>
+        </SnackbarProvider>
     );
 }
 

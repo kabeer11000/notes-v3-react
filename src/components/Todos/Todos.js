@@ -45,8 +45,9 @@ export class Box extends React.Component {
 
     delete_note(d) {
         deleteTodo(d.date);
-        console.log(d.e.target.parentNode.parentNode.parentNode.parentNode.closest('.col-md-4').remove())
-//        document.querySelector(`#${d.noteId}`).remove();
+
+        document.getElementById(`todo_${d.noteId}`).remove();
+        //        document.querySelector(`#${d.noteId}`).remove();
     }
 
     state = {
@@ -90,7 +91,7 @@ export class Box extends React.Component {
                 this.setState({
                     notes: posts.map((note, i) => {
                         return (
-                            <div class="col-md-4 p-0 mr-2 my-2">
+                            <div class="col-md-4 p-0 mr-2 my-2" id={`todo_${note.uniqid}`}>
                                 <Accordion>
                                     <AccordionSummary
                                         expandIcon={<ExpandMoreIcon/>}
@@ -106,23 +107,23 @@ export class Box extends React.Component {
                                         </Typography>
                                     </AccordionSummary>
                                     <AccordionDetails>
-                                        <Typography className={'w-100'}>
+                                        <Typography className={'w-100 text-truncate'}>
                                             {this.check_if_null(note.body)}
                                             <Divider/>
-                                            <p className="header d-flex p-0 justify-content-around w-100">
-                                                <span className="d-none id">{note.uniqid}</span>
-                                                <IconButton onClick={() => {
-                                                    this.listen_note(note.title + '' + note.body)
-                                                }} color={'primary'}>
-                                                    <VolumeUp/>
-                                                </IconButton>
-                                                <IconButton color={'primary'} onClick={(e) => {
-                                                    this.delete_note({date: note.date, noteId: note.uniqid, e: e})
-                                                }}>
-                                                    <Delete/>
-                                                </IconButton>
-                                            </p>
                                         </Typography>
+                                        <p className="header d-flex p-0 justify-content-around w-100">
+                                            <span className="d-none id">{note.uniqid}</span>
+                                            <IconButton onClick={() => {
+                                                this.listen_note(note.title + '' + note.body)
+                                            }} color={'primary'}>
+                                                <VolumeUp/>
+                                            </IconButton>
+                                            <IconButton color={'primary'} onClick={(e) => {
+                                                this.delete_note({date: note.date, noteId: note.uniqid, e: e})
+                                            }}>
+                                                <Delete/>
+                                            </IconButton>
+                                        </p>
                                     </AccordionDetails>
                                 </Accordion>
                             </div>

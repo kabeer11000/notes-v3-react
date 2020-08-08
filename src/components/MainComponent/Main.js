@@ -17,15 +17,14 @@ import FullScreenDialog from "../addNewComponent/addNewComponent";
 import CustomizedInputBase from "../searchbar/searchbar";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
-import {InsertDriveFile, ListAlt} from "@material-ui/icons";
+import {InsertDriveFile, ListAlt, Settings} from "@material-ui/icons";
 import Todos from "../Todos/Todos";
 import ToDoAddNew from "../ToDoAddNew/ToDoAddNew";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import Slide from "@material-ui/core/Slide";
 import init from "../../js/utils/init/init";
 import Drawer from "@material-ui/core/Drawer";
-import RouteButtons from "../Drawer/RouteButtons";
-import ReactPullToRefresh from "react-pull-to-refresh/lib/components/ReactPullToRefresh";
+import {Link} from "react-router-dom";
 
 const drawerWidth = 240;
 const theme_ = createMuiTheme({
@@ -132,7 +131,12 @@ function MainComponent(props) {
                 <span className={classes.logo_text}>&nbsp; Kabeers Network</span>
             </div>
             <Divider/>
-            <RouteButtons/>
+            <List>
+                <ListItem button component={Link} to={'/settings'} color={"primary"}>
+                    <ListItemIcon><Settings/></ListItemIcon>
+                    <ListItemText primary={'Settings'}/>
+                </ListItem>
+            </List>
             <Divider/>
             <List>
                 {['All mail', 'Trash', 'Spam'].map((text, index) => (
@@ -228,18 +232,10 @@ function MainComponent(props) {
                 </nav>
                 <main className={classes.content}>
                     <div className={classes.toolbar}/>
-                    <ReactPullToRefresh
-                        onRefresh={() => {
-                            Refresh_setValue('2');
-                            console.log('Refreshed')
-                        }}
-                        className="your-own-class-if-you-want"
-                    >
-                        <Render_m v={!!+BNav_value} refresh={Refresh_}/>
-                    </ReactPullToRefresh>
+                    <Render_m v={!!+BNav_value} refresh={Refresh_}/>
                     <HideOnScroll {...props}>
                         <AppBar color="primary"
-                                style={{position: 'fixed', top: "auto", bottom: 0, width: '100%',}}>
+                                style={{position: 'fixed', top: "auto", bottom: 0, width: '100%',}} component={'div'}>
                             <BottomNavigation value={BNav_value} onChange={BNav_handleChange}>
                                 <BottomNavigationAction label="Notes" icon={<InsertDriveFile/>}/>
                                 <BottomNavigationAction label="Todo" icon={<ListAlt/>}/>
@@ -259,5 +255,14 @@ MainComponent.propTypes = {
      */
     window: PropTypes.func,
 };
-
+/*                    <ReactPullToRefresh
+                        onRefresh={() => {
+                            Refresh_setValue('2');
+                            console.log('Refreshed')
+                        }}
+                        className="your-own-class-if-you-want"
+                    >
+                    <Render_m v={!!+BNav_value} refresh={Refresh_}/>
+                    </ReactPullToRefresh>
+*/
 export default MainComponent;

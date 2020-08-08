@@ -19,6 +19,7 @@ import PropTypes from "prop-types";
 import {getTodos_non_async} from "../../js/main/get-todos";
 import NewLabelDialogDemo from "./NewLabelDialog";
 import Typography from "@material-ui/core/Typography";
+import {useSnackbar} from "notistack";
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -44,6 +45,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 export default function ToDoDialog() {
     const classes = useStyles();
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const [open, setOpen] = React.useState(false);
     const [value, setValue] = React.useState('Controlled');
     const [labels, setLabels] = React.useState(getTodos_non_async());
@@ -95,10 +97,14 @@ export default function ToDoDialog() {
             saveTodo(todo, () => {
                 console.log('Fuck u donna');
                 handleClickOpen(false);
+                enqueueSnackbar('Todo Saved');
+
             });
         } else {
             console.log('Empty Note Discarded');
             handleClickOpen(false);
+
+            enqueueSnackbar('Empty Todo Discarded');
         }
     };
 
@@ -169,7 +175,7 @@ export default function ToDoDialog() {
             </HideOnScroll>
             <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
                 <DialogTitle id="responsive-dialog-title">
-                    <IconButton>
+                    <IconButton onClick={handleClose}>
                         <ArrowBack/>
                     </IconButton>
                     {"Add New Todo"}

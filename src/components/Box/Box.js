@@ -38,7 +38,8 @@ export class Box extends React.Component {
 
     delete_note(d) {
         deleteNote(d.date, '123456', d.noteId);
-        console.log(d.e.target.parentNode.parentNode.parentNode.parentNode.closest('.col-md-4').remove())
+        document.getElementById(`note_${d.noteId}`).remove();
+        //console.log(d.e.target.parentNode.parentNode.parentNode.parentNode.closest('.col-md-4').remove())
 //        document.querySelector(`#${d.noteId}`).remove();
     }
 
@@ -72,7 +73,7 @@ export class Box extends React.Component {
                         let heading = note.content.split('\n')[0]; // lines is an array of strings
                         note.content = note.content.substring(heading.length);
                         return (
-                            <div key={i} className={'col-md-4 p-0 m-0'}>
+                            <div key={i} className={'col-md-4 p-0 m-0'} id={`note_${note.uniqid}`}>
                                 <Paper onDoubleClick={() => {
                                     return (<ContentEditable content={nc} date={note.date} uniqid={note.uniqid}/>);
                                 }}

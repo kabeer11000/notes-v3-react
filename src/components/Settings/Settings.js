@@ -7,14 +7,18 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import {ArrowBack, Bluetooth, Wifi} from '@material-ui/icons';
+import {ArrowBack, BubbleChart, Delete, Feedback, OpenInNew} from '@material-ui/icons';
 import Slide from '@material-ui/core/Slide';
-import uniqid from "../../js/utils/uniqid";
-import saveNote from "../../js/main/save-notes";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import Switch from "@material-ui/core/Switch";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListSubheader from "@material-ui/core/ListSubheader";
+import saveSmartComposeSettings from "../../js/utils/local/saveSmartComposeSettings";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import FactoryResetDialogDemo from "./FactoryResetDialog";
+import Divider from "@material-ui/core/Divider";
+import {useSnackbar} from 'notistack';
+
 
 const theme_ = createMuiTheme({
     palette: {
@@ -64,8 +68,13 @@ function autosize() {
 
 export default function SettingsComponent(props) {
     const classes = useStyles();
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const [open, setOpen] = React.useState(false);
     const [value, setValue] = React.useState('Controlled');
+//    const button = JSON.parse(JSON.parse(localStorage.getItem('smartcompose')));
+    const [buttons, setButtons] = React.useState({
+        smartCompose: JSON.parse(JSON.parse(localStorage.getItem('smartcompose')))
+    });
     let note_s = {};
 
     const handleChange = (event) => {
@@ -77,25 +86,19 @@ export default function SettingsComponent(props) {
     if (props.open) {
         handleClickOpen()
     }
-    const handleSave = () => {
-        let noteContentJSON = {
-            content: note_s.textarea,
-            uniqid: uniqid()
-        };
-        saveNote(new Date().toLocaleString(), noteContentJSON).then(() => {
-            console.log('Fuck u donna');
-        })
-
-    };
     const handleClose = () => {
         setOpen(false);
+    };
+    const changeTextBox = (v) => {
+        console.log(v)
     };
 
     return (
         <div>
             <AppBar className={classes.appBar} color={"primary"}>
                 <Toolbar color={'primary'}>
-                    <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+                    <IconButton component={'Link'} to={'/'} edge="start" color="inherit" onClick={handleClose}
+                                aria-label="close">
                         <ArrowBack/>
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
@@ -106,31 +109,46 @@ export default function SettingsComponent(props) {
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12 px-0">
-                        <List subheader={<ListSubheader>Settings</ListSubheader>} className={classes.root}>
+                        <List subheader={<ListSubheader>General</ListSubheader>} className={classes.root}>
                             <ListItem>
                                 <ListItemIcon>
-                                    <Wifi/>
+                                    <BubbleChart/>
                                 </ListItemIcon>
-                                <ListItemText id="switch-list-label-wifi" primary="Wi-Fi"/>
+                                <ListItemText id="switch-list-label-wifi" primary="Smart Compose ©"/>
                                 <ListItemSecondaryAction>
-                                    <Switch
-                                        edge="end"
-                                        checked={true}
-                                        inputProps={{'aria-labelledby': 'switch-list-label-wifi'}}
-                                    />
+                                    <FormControlLabel
+                                        control={<Checkbox id={'cbx'} checked={buttons.smartCompose} name="checkedC"
+                                                           onChange={(e) => {
+                                                               saveSmartComposeSettings('cbx').then(() => {
+                                                                   setButtons({smartCompose: !buttons.smartCompose});
+                                                               });
+                                                               enqueueSnackbar('Settings Saved');
+                                                           }} edge="end"/>} label={''}/>
                                 </ListItemSecondaryAction>
                             </ListItem>
                             <ListItem>
                                 <ListItemIcon>
-                                    <Bluetooth/>
+                                    <Delete/>
                                 </ListItemIcon>
-                                <ListItemText id="switch-list-label-bluetooth" primary="Bluetooth"/>
+                                <ListItemText id="switch-list-label-bluetooth" primary="Factory Reset"/>
                                 <ListItemSecondaryAction>
-                                    <Switch
-                                        edge="end"
-                                        checked={false}
-                                        inputProps={{'aria-labelledby': 'switch-list-label-bluetooth'}}
-                                    />
+                                    <FactoryResetDialogDemo/>
+                                </ListItemSecondaryAction>
+                            </ListItem>
+                            <Divider/>
+                        </List>
+                        <List subheader={<ListSubheader>FeedBack & Kabeers Network</ListSubheader>}
+                              className={classes.root}>
+                            <ListItem component={'a'} href={'mailto:kabeersnetwork@gmail.com'} target={'_blank'}>
+                                <ListItemIcon>
+                                    <Feedback/>
+                                </ListItemIcon>
+                                <ListItemText style={{color: '#757575'}} id="switch-list-label-bluetooth"
+                                              primary="Send FeedBack"/>
+                                <ListItemSecondaryAction>
+                                    <IconButton>
+                                        <OpenInNew/>
+                                    </IconButton>
                                 </ListItemSecondaryAction>
                             </ListItem>
                         </List>
@@ -140,6 +158,7 @@ export default function SettingsComponent(props) {
         </div>
     );
 }
+
 /*                            <textarea
                                 onFocus={(e)=>{reseize_k(e)}}
                                 maxLength="1600"

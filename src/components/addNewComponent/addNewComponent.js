@@ -17,6 +17,7 @@ import PropTypes from "prop-types";
 import record from "../../js/utils/record/record";
 import getPredictiveText from "../../js/utils/ui/predictiveText";
 import ChatBox from "../ChatBox/ChatBox";
+import {useSnackbar} from 'notistack';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -54,6 +55,7 @@ export default function FullScreenDialog() {
     const [open, setOpen] = React.useState(false);
     const [title, setTitle] = React.useState('Add New');
     const [chars, setChars] = React.useState('0');
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     let note_s = {};
     note_s.textarea = undefined;
     note_s.smartCompose = [];
@@ -128,10 +130,12 @@ export default function FullScreenDialog() {
             saveNote(new Date().toLocaleString(), noteContentJSON, () => {
                 console.log('Fuck u donna');
                 handleClickOpen(false);
+                enqueueSnackbar('Note Saved!');
             });
         }else{
             console.log('Empty Note Discarded');
             handleClickOpen(false);
+            enqueueSnackbar('Empty Note Discarded')
         }
     };
     const handleClose = () => {
