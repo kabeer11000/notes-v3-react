@@ -2,9 +2,7 @@
 }
 
 .scrollmenu {
-    display: inline-flex !important;
-    overflow: auto !important;
-    white-space: nowrap !important;
-    max-width: 18rem;
-    overflow-scrolling: auto;
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: left;
 }

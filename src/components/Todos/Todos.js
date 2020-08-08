@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import speak from "../../js/utils/speech/speak";
 import IconButton from "@material-ui/core/IconButton";
-import {Delete, VolumeUp} from '@material-ui/icons';
+import {Delete, Label, VolumeUp} from '@material-ui/icons';
 import deleteTodo from "../../js/main/delete-todo";
 import getTodos, {getTodosByLabel} from "../../js/main/get-todos";
 import Divider from "@material-ui/core/Divider";
@@ -90,7 +90,7 @@ export class Box extends React.Component {
                 this.setState({
                     notes: posts.map((note, i) => {
                         return (
-                            <div class="col-md-4 p-0 m-0 my-2">
+                            <div class="col-md-4 p-0 mr-2 my-2">
                                 <Accordion>
                                     <AccordionSummary
                                         expandIcon={<ExpandMoreIcon/>}
@@ -101,7 +101,7 @@ export class Box extends React.Component {
                                             <small class="text-muted small text-truncate mb-2" style={{
                                                 wordWrap: 'break-word',
                                                 whiteSpace: 'pre-wrap'
-                                            }}>About {timeAgo(note.date)}</small><br/>
+                                            }}>About {timeAgo(note.date)} | <Label/> {note.label}</small><br/><br/>
                                             <div className={'mt-2'}>{this.check_if_null(note.title)}</div>
                                         </Typography>
                                     </AccordionSummary>
@@ -153,7 +153,7 @@ export class Box extends React.Component {
 //onClick={(e) => this.contentEditable_paper(e.target)}
     render() {
         return (
-            <div className={'container p-0 m-0'}>
+            <div className={'container p-0 m-0 w-100'}>
                 <div className={'row p-0 m-0'}>
                     <div style={{marginTop: '8rem'}} className={` preload_spinner ${this.state.preloader}`}>
                         <div className={'d-flex justify-content-center'}>
@@ -164,7 +164,9 @@ export class Box extends React.Component {
                             </svg>
                         </div>
                     </div>
-                    <ToDoChips chip_val={this.handleChip_} chip_blur={this.refresh}/>
+                    <div className={'col-md-12'}>
+                        <ToDoChips chip_val={this.handleChip_} chip_blur={this.refresh}/>
+                    </div>
                     {this.state.notes}
                 </div>
             </div>

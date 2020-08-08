@@ -1,5 +1,5 @@
 import React from 'react';
-import {makeStyles} from '@material-ui/core/styles';
+import {createMuiTheme, makeStyles} from '@material-ui/core/styles';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
@@ -7,7 +7,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import {Bluetooth, Close, Save, Wifi} from '@material-ui/icons';
+import {ArrowBack, Bluetooth, Wifi} from '@material-ui/icons';
 import Slide from '@material-ui/core/Slide';
 import uniqid from "../../js/utils/uniqid";
 import saveNote from "../../js/main/save-notes";
@@ -15,6 +15,20 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Switch from "@material-ui/core/Switch";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListSubheader from "@material-ui/core/ListSubheader";
+
+const theme_ = createMuiTheme({
+    palette: {
+        primary: {
+            contrastText: '#FFF',
+            main: '#FFC400',
+            light: '#FFFFFF',
+            dark: '#FFFFFF',
+        },
+        secondary: {
+            main: '#FFFFFF',
+        }
+    }
+});
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -60,7 +74,7 @@ export default function SettingsComponent(props) {
     const handleClickOpen = () => {
         setOpen(true);
     };
-    if (props.open){
+    if (props.open) {
         handleClickOpen()
     }
     const handleSave = () => {
@@ -79,53 +93,50 @@ export default function SettingsComponent(props) {
 
     return (
         <div>
-                <AppBar className={classes.appBar}>
-                    <Toolbar>
-                        <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-                            <Close/>
-                        </IconButton>
-                        <Typography variant="h6" className={classes.title}>
-                            Add New
-                        </Typography>
-                        <IconButton autoFocus color="inherit" onClick={handleSave}>
-                            <Save/>
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12 px-0">
-                            <List subheader={<ListSubheader>Settings</ListSubheader>} className={classes.root}>
-                                <ListItem>
-                                    <ListItemIcon>
-                                        <Wifi/>
-                                    </ListItemIcon>
-                                    <ListItemText id="switch-list-label-wifi" primary="Wi-Fi"/>
-                                    <ListItemSecondaryAction>
-                                        <Switch
-                                            edge="end"
-                                            checked={true}
-                                            inputProps={{'aria-labelledby': 'switch-list-label-wifi'}}
-                                        />
-                                    </ListItemSecondaryAction>
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemIcon>
-                                        <Bluetooth/>
-                                    </ListItemIcon>
-                                    <ListItemText id="switch-list-label-bluetooth" primary="Bluetooth"/>
-                                    <ListItemSecondaryAction>
-                                        <Switch
-                                            edge="end"
-                                            checked={false}
-                                            inputProps={{'aria-labelledby': 'switch-list-label-bluetooth'}}
-                                        />
-                                    </ListItemSecondaryAction>
-                                </ListItem>
-                            </List>
-                        </div>
+            <AppBar className={classes.appBar} color={"primary"}>
+                <Toolbar color={'primary'}>
+                    <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+                        <ArrowBack/>
+                    </IconButton>
+                    <Typography variant="h6" className={classes.title}>
+                        Settings
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 px-0">
+                        <List subheader={<ListSubheader>Settings</ListSubheader>} className={classes.root}>
+                            <ListItem>
+                                <ListItemIcon>
+                                    <Wifi/>
+                                </ListItemIcon>
+                                <ListItemText id="switch-list-label-wifi" primary="Wi-Fi"/>
+                                <ListItemSecondaryAction>
+                                    <Switch
+                                        edge="end"
+                                        checked={true}
+                                        inputProps={{'aria-labelledby': 'switch-list-label-wifi'}}
+                                    />
+                                </ListItemSecondaryAction>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemIcon>
+                                    <Bluetooth/>
+                                </ListItemIcon>
+                                <ListItemText id="switch-list-label-bluetooth" primary="Bluetooth"/>
+                                <ListItemSecondaryAction>
+                                    <Switch
+                                        edge="end"
+                                        checked={false}
+                                        inputProps={{'aria-labelledby': 'switch-list-label-bluetooth'}}
+                                    />
+                                </ListItemSecondaryAction>
+                            </ListItem>
+                        </List>
                     </div>
                 </div>
+            </div>
         </div>
     );
 }

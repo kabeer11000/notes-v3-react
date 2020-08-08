@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import List from '@material-ui/core/List';
@@ -18,14 +17,15 @@ import FullScreenDialog from "../addNewComponent/addNewComponent";
 import CustomizedInputBase from "../searchbar/searchbar";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
-import {InsertDriveFile, ListAlt, Settings} from "@material-ui/icons";
+import {InsertDriveFile, ListAlt} from "@material-ui/icons";
 import Todos from "../Todos/Todos";
 import ToDoAddNew from "../ToDoAddNew/ToDoAddNew";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import Slide from "@material-ui/core/Slide";
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import init from "../../js/utils/init/init";
-
+import Drawer from "@material-ui/core/Drawer";
+import RouteButtons from "../Drawer/RouteButtons";
+import ReactPullToRefresh from "react-pull-to-refresh/lib/components/ReactPullToRefresh";
 
 const drawerWidth = 240;
 const theme_ = createMuiTheme({
@@ -100,6 +100,7 @@ function MainComponent(props) {
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [BNav_value, BNav_setValue] = React.useState(0);
+    const [Refresh_, Refresh_setValue] = React.useState('');
     const BNav_handleChange = (event, newValue) => {
         BNav_setValue(newValue);
     };
@@ -107,6 +108,10 @@ function MainComponent(props) {
     function handleChange() {
 
     }
+
+    const PullToRefresh_ = () => {
+        setMobileOpen(false);
+    };
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
@@ -127,12 +132,7 @@ function MainComponent(props) {
                 <span className={classes.logo_text}>&nbsp; Kabeers Network</span>
             </div>
             <Divider/>
-            <List>
-                <ListItem button>
-                    <ListItemIcon><Settings/></ListItemIcon>
-                    <ListItemText primary={'Settings'}/>
-                </ListItem>
-            </List>
+            <RouteButtons/>
             <Divider/>
             <List>
                 {['All mail', 'Trash', 'Spam'].map((text, index) => (
@@ -177,74 +177,78 @@ function MainComponent(props) {
 
     function Render_m(props) {
         if (!props.v) {
-            return (<div><Box/><FullScreenDialog/></div>);
+            return (<div><Box/><FullScreenDialog/>
+                <div className={'d-none'}>{props.refresh}</div>
+            </div>);
         } else {
-            return (<div_><Todos/><ToDoAddNew/></div_>);
+            return (<div_><Todos/><ToDoAddNew/>
+                <div className={'d-none'}>{props.refresh}</div>
+            </div_>);
         }
     }
 
     return (
 
-        <Router>
-            <Switch>
-                <MuiThemeProvider theme={theme_}>
-                    <div className={classes.root}>
-                        <CssBaseline/>
-                        <Route path="/">
-                            <CustomizedInputBase context_={BNav_value} appBarPos={"fixed"} class_={classes.appBar}
-                                                 drawer_={handleDrawerToggle}
-                                                 menu_btn_={classes.menuButton}/>
-                            <nav className={classes.drawer} aria-label="mailbox folders">
-                                {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-                                <Hidden smUp implementation="css">
-                                    <Drawer
-                                        container={container}
-                                        variant="temporary"
-                                        anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-                                        open={mobileOpen}
-                                        onClose={handleDrawerToggle}
-                                        classes={{
-                                            paper: classes.drawerPaper,
-                                        }}
-                                        ModalProps={{
-                                            keepMounted: true, // Better open performance on mobile.
-                                        }}
-                                    >
-                                        {drawer}
-                                    </Drawer>
-                                </Hidden>
-                                <Hidden xsDown implementation="css">
-                                    <Drawer
-                                        classes={{
-                                            paper: classes.drawerPaper,
-                                        }}
-                                        variant="permanent"
-                                        open
-                                    >
-                                        {drawer}
-                                    </Drawer>
-                                </Hidden>
-                            </nav>
-                        </Route>
-                        <main className={classes.content}>
-                            <Route path="/">
-                                <div className={classes.toolbar}/>
-                                <Render_m v={!!+BNav_value}/>
-                                <HideOnScroll {...props}>
-                                    <AppBar position="fixed" color="primary"
-                                            style={{top: "auto", bottom: 0, width: '100%',}}>
-                                        <BottomNavigation value={BNav_value} onChange={BNav_handleChange}>
-                                            <BottomNavigationAction label="Notes" icon={<InsertDriveFile/>}/>
-                                            <BottomNavigationAction label="Todo" icon={<ListAlt/>}/>
-                                        </BottomNavigation>
-                                    </AppBar>
-                                </HideOnScroll>
-                            </Route>
-                        </main>
-                    </div>
-                </MuiThemeProvider>
-            </Switch>
-        </Router>
+        <MuiThemeProvider theme={theme_}>
+            <div className={classes.root}>
+                <CssBaseline/>
+                <CustomizedInputBase context_={BNav_value} appBarPos={"fixed"} class_={classes.appBar}
+                                     drawer_={handleDrawerToggle}
+                                     menu_btn_={classes.menuButton}/>
+                <nav className={classes.drawer} aria-label="mailbox folders">
+                    {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+                    <Hidden smUp implementation="css">
+                        <Drawer
+                            container={container}
+                            variant="temporary"
+                            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                            open={mobileOpen}
+                            onClose={handleDrawerToggle}
+                            classes={{
+                                paper: classes.drawerPaper,
+                            }}
+                            ModalProps={{
+                                keepMounted: true, // Better open performance on mobile.
+                            }}
+                        >
+                            {drawer}
+                        </Drawer>
+                    </Hidden>
+                    <Hidden xsDown implementation="css">
+                        <Drawer
+                            classes={{
+                                paper: classes.drawerPaper,
+                            }}
+                            variant="permanent"
+                            open
+                        >
+                            {drawer}
+                        </Drawer>
+                    </Hidden>
+                </nav>
+                <main className={classes.content}>
+                    <div className={classes.toolbar}/>
+                    <ReactPullToRefresh
+                        onRefresh={() => {
+                            Refresh_setValue('2');
+                            console.log('Refreshed')
+                        }}
+                        className="your-own-class-if-you-want"
+                    >
+                        <Render_m v={!!+BNav_value} refresh={Refresh_}/>
+                    </ReactPullToRefresh>
+                    <HideOnScroll {...props}>
+                        <AppBar color="primary"
+                                style={{position: 'fixed', top: "auto", bottom: 0, width: '100%',}}>
+                            <BottomNavigation value={BNav_value} onChange={BNav_handleChange}>
+                                <BottomNavigationAction label="Notes" icon={<InsertDriveFile/>}/>
+                                <BottomNavigationAction label="Todo" icon={<ListAlt/>}/>
+                            </BottomNavigation>
+                        </AppBar>
+                    </HideOnScroll>
+                </main>
+            </div>
+        </MuiThemeProvider>
     );
 }
 

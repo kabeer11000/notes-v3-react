@@ -170,10 +170,10 @@ export default function FullScreenDialog() {
         setTitle(v);
     }
 
-    function logSmartCompose(v) {
-        document.getElementById('note-textarea').value = v.html;
-        note_s.textarea = v.html;
-        console.log(v);
+    function logSmartCompose(v, state_) {
+        document.getElementById('note-textarea').value = v;
+        note_s.textarea = v;
+        console.log(state_);
         document.getElementById('c_').innerHTML = `${note_s.textarea.length} / 1600`
     }
 

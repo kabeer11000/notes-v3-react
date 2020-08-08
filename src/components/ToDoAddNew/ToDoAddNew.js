@@ -18,6 +18,7 @@ import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import PropTypes from "prop-types";
 import {getTodos_non_async} from "../../js/main/get-todos";
 import NewLabelDialogDemo from "./NewLabelDialog";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -45,8 +46,9 @@ export default function ToDoDialog() {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [value, setValue] = React.useState('Controlled');
+    const [labels, setLabels] = React.useState(getTodos_non_async());
+    const [labelsHtml, setLabelsHtml] = React.useState(getLabels);
     const [anchorEl, setAnchorEl] = React.useState(null);
-
 
     const menu_handleClose = () => {
         setAnchorEl(null);
@@ -75,6 +77,9 @@ export default function ToDoDialog() {
         note_s.labelED = '' + v;
         console.log(v);
         setAnchorEl(null);
+        let labels__ = labels;
+        labels__.push(v);
+        setLabels(labels__);
     }
 
     const handleSave = () => {
@@ -132,7 +137,7 @@ export default function ToDoDialog() {
     };
 
     function getLabels() {
-        let labels_ = getTodos_non_async(), b = [];
+        let labels_ = labels, b = [];
         labels_.forEach(value => {
             b.push(value.label);
         });
@@ -148,6 +153,8 @@ export default function ToDoDialog() {
                 })}
             </div>);
     }
+
+//   getLabels();
 
     return (
         <div>
@@ -198,20 +205,20 @@ export default function ToDoDialog() {
                 </DialogContent>
                 <DialogActions>
                     <div style={{position: 'fixed', left: '1rem', display: 'inline-flex'}}>
+                        <Typography noWrap>Labels
+                            <Select
+                                labelId="demo-simple-select-outlined-label"
+                                id="simple-menu"
+                                value={note_s.labelED}
+                                onChange={menu_handleClose}
+                                label="Labels">
+                                <div>
+                                    {labelsHtml}
+                                </div>
+                                <NewLabelDialogDemo callback={addLabel}/>
+                            </Select>
 
-                        <IconButton id="demo-simple-select-outlined-label">
-                        </IconButton>
-                        <Select
-                            labelId="demo-simple-select-outlined-label"
-                            id="simple-menu"
-                            value={note_s.labelED}
-                            onChange={menu_handleClose}
-                            label="Labels"
-                        >
-                            {getLabels()}
-
-                            <NewLabelDialogDemo callback={addLabel}/>
-                        </Select>
+                        </Typography>
                     </div>
                     <Button autoFocus onClick={handleClose} color="primary">
                         Discard

@@ -53,8 +53,8 @@ export default function ToDoChips(props) {
                 }
 
                 return (
-                    <div key={i}>
                         <Chip
+                            key={i}
                             clickable={true}
                             onClick={() => {
                                 handleChip(data)
@@ -64,9 +64,9 @@ export default function ToDoChips(props) {
                                 props.chip_blur()
                             }}
                             label={data}
-                            className={classes.chip}
+                            style={{maxWidth: '5rem'}}
+                            className={`${classes.chip} text-truncate`}
                         />
-                    </div>
                 );
             })}
         </div>

@@ -39,6 +39,7 @@
     ]
   },
   "devDependencies": {
-    "prop-types": "^15.7.2"
+    "prop-types": "^15.7.2",
+    "sw-precache": "^4.2.2"
   }
 }

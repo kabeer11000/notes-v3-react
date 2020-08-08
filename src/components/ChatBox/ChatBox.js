@@ -120,7 +120,8 @@ class ChatBox extends React.PureComponent {
     }
   };
 
-  learnNewWords = () => {
+
+  learnNewWords = async () => {
     const fullText = this.chatBox.current.innerText;
     const validText = fullText.split(' ').filter((word) => {
       if (word.length >= MAX_NUMBER_OF_LETTERS_CHECKED) {
@@ -145,108 +146,6 @@ class ChatBox extends React.PureComponent {
     */
 
     //TODO Consult public/auth/words_generate.php for words Generation
-    tempWordsList = {
-      "thr": "threat",
-      "wid": "wide",
-      "coo": "cookie",
-      "pop": "population",
-      "hab": "habit",
-      "res": "researcher",
-      "loc": "local",
-      "ite": "item",
-      "sim": "similar",
-      "not": "notion",
-      "aut": "author",
-      "eva": "evaluation",
-      "woo": "wooden",
-      "dra": "dramatic",
-      "lac": "lack",
-      "bes": "besides",
-      "be": "bed",
-      "wri": "writer",
-      "imp": "important",
-      "sho": "should",
-      "tha": "that",
-      "exp": "express",
-      "con": "contribution",
-      "con": "consistent",
-      "sha": "shadow",
-      "sta": "statement",
-      "pro": "provision",
-      "bee": "beer",
-      "can": "cancer",
-      "imm": "immigrant",
-      "h": "he",
-      "pla": "plan",
-      "pub": "publicly",
-      "div": "divide",
-      "cro": "cross",
-      "cli": "clinical",
-      "inq": "inquiry",
-      "ele": "electricity",
-      "wea": "wealth",
-      "ins": "insist",
-      "con": "contemporary",
-      "jus": "just",
-      "fea": "fear",
-      "org": "organic",
-      "bea": "beach",
-      "est": "estimate",
-      "cra": "craft",
-      "occ": "occur",
-      "inv": "investigation",
-      "en": "end",
-      "emo": "emotional",
-      "bla": "blanket",
-      "lun": "lunch",
-      "civ": "civil",
-      "clo": "closely",
-      "lau": "launch",
-      "net": "network",
-      "fla": "flavor",
-      "dis": "discipline",
-      "che": "chemical",
-      "hon": "honor",
-      "dra": "drag",
-      "who": "whom",
-      "wag": "wage",
-      "fel": "fellow",
-      "con": "congress",
-      "mac": "machine",
-      "sho": "shock",
-      "pol": "politically",
-      "ca": "can",
-      "bel": "belief",
-      "mag": "magazine",
-      "sta": "status",
-      "ide": "identify",
-      "rec": "recent",
-      "tim": "time",
-      "tea": "tear",
-      "hi": "his",
-      "cit": "citizen",
-      "jai": "jail",
-      "kee": "keep",
-      "ton": "tonight",
-      "whe": "whenever",
-      "fin": "finding",
-      "rei": "reinforce",
-      "ar": "art",
-      "hop": "hope",
-      "exi": "existence",
-      "wh": "why",
-      "beh": "behind",
-      "mar": "married",
-      "mor": "morning",
-      "lin": "link",
-      "uni": "universal",
-      "sel": "self",
-      "thi": "this",
-      "alo": "alone",
-      "emp": "employment",
-      "rea": "reaction",
-      "con": "constitutional"
-    };
     validText.forEach((word) => {
       const isWordAlreadyInList = (wordToCheck) => !!Object.values(WordsList.getWordsList).filter(word => word === wordToCheck).length;
       const isAbbrAlreadyInList = (abbrToCheck) => !!Object.keys(WordsList.getWordsList).filter(abbr => abbr === abbrToCheck).length;
@@ -297,10 +196,11 @@ class ChatBox extends React.PureComponent {
             className="form-control textarea main-textarea char-counter box"
             id="note-textarea"
             rows="5"
+            data-max-length="10"
+            style={{height: '80vh'}}
             placeholder="Create a new note by typing or using voice recognition."
-            onkeypress="return (this.innerHTML.length <= 1600)"
             onKeyUp={(e) => {
-              if (this.state.html) this.props.callback(this.state);
+              if (e.currentTarget.innerText.length) this.props.callback(e.currentTarget.innerText, this.state);
               this.props.chars(e.currentTarget.innerText.length);
             }}
             onKeyDown={e => {

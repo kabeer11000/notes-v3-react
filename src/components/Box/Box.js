@@ -76,7 +76,7 @@ export class Box extends React.Component {
                                 <Paper onDoubleClick={() => {
                                     return (<ContentEditable content={nc} date={note.date} uniqid={note.uniqid}/>);
                                 }}
-                                       className={"col-md-4 mb-3 mr-2 ml-1 text-body p-0 text-break " + note.uniqid}>
+                                       className={"mb-3 mr-2 ml-1 text-body p-0 text-break " + note.uniqid}>
                                     <p className="header d-flex p-0 justify-content-around">
                                         <span className="d-none id">{note.uniqid}</span>
                                         <span className="date p-3">{note.date}</span>
@@ -125,6 +125,7 @@ export class Box extends React.Component {
 
     render() {
         return (
+
             <div class="container-fluid px-1">
                 <div class="row">
                     <div style={{marginTop: '8rem'}} className={` preload_spinner ${this.state.preloader}`}>

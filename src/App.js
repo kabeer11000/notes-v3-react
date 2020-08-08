@@ -4,7 +4,8 @@ import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import MainComponent from "./components/MainComponent/Main";
 import SignIn from "./components/auth/SignIn";
 import SignUp from "./components/auth/SignUp";
-
+import SettingsComponent from "./components/Settings/Settings";
+import './serviceWorker';
 
 function App(props) {
     return (
@@ -12,6 +13,7 @@ function App(props) {
             <Switch>
                 <Route path={'/login'} component={SignIn}/>
                 <Route path={'/signup'} component={SignUp}/>
+                <Route path={'/settings'} component={SettingsComponent}/>
                 <Route path={'/'} component={MainComponent}/>
             </Switch>
         </Router>

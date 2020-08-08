@@ -1,3 +1,8 @@
+import getWords from "../../../js/api/predictive/getWords";
+
+let WordsStore_ = {};
+getWords().then((value => WordsStore_ = value));
+
 export const WordsList = {
   get getWordsList() {
     return this.wordsList ? this.wordsList : {};
@@ -8,7 +13,8 @@ export const WordsList = {
     }
     this.wordsList = {
       ...this.wordsList,
-      ...newWords
+      ...WordsStore_,
+      ...newWords,
     };
   }
 };
