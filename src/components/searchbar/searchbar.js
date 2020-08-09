@@ -22,6 +22,7 @@ import Button from "@material-ui/core/Button";
 import getTodos from "../../js/main/get-todos";
 import deleteTodo from "../../js/main/delete-todo";
 import store from "store";
+import SignOut from "../../js/api/auth/SignOut";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -255,6 +256,7 @@ export default function CustomizedInputBase(props) {
     const popover_handleClick = (event) => {
         popover_setAnchorEl(event.currentTarget);
     };
+    let signOut__ = <div/>;
 
     const popover_handleClose = () => {
         popover_setAnchorEl(null);
@@ -267,7 +269,11 @@ export default function CustomizedInputBase(props) {
                 <Typography variant={'p'} muted
                             className={'my-1 text-muted'}>{user__.email}</Typography>
                 <Divider className={'my-3'}/>
-                <Button variant={'outlined'} className={'btn my-3'}><small>SIGN OUT</small></Button></div>;
+                <Button variant={'outlined'} className={'btn my-3'} onClick={() => {
+                    SignOut();
+                    window.location.href = '/login'
+                }}><small>SIGN OUT</small></Button>
+            </div>;
 
         }
         return html;
@@ -277,6 +283,7 @@ export default function CustomizedInputBase(props) {
     const popover_id = popover_open ? 'simple-popover' : undefined;
     return (
         <div>
+            {signOut__}
             <HideOnScroll {...props}>
                 <AppBar className={props.class_} position={props.appBarPos} color={'transparent'} elevation={0}>
                     <Toolbar>

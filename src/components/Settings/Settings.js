@@ -20,6 +20,7 @@ import Divider from "@material-ui/core/Divider";
 import {useSnackbar} from 'notistack';
 import store from "store";
 import Redirect from "react-router-dom/es/Redirect";
+import AccountPage from "../AccountPage/AccountPage";
 
 
 const theme_ = createMuiTheme({
@@ -120,6 +121,12 @@ export default function SettingsComponent(props) {
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12 px-0">
+                        <div className={'mt-3'}>
+                            <div className={'mb-2'}>
+                                <AccountPage/>
+                            </div>
+                            <Divider/>
+                        </div>
                         <List subheader={<ListSubheader>General</ListSubheader>} className={classes.root}>
                             <ListItem>
                                 <ListItemIcon>
@@ -139,7 +146,8 @@ export default function SettingsComponent(props) {
                                 <ListItemText id="switch-list-label-wifi" primary="Smart Compose ©"/>
                                 <ListItemSecondaryAction>
                                     <FormControlLabel
-                                        control={<Checkbox id={'cbx'} checked={buttons.smartCompose} name="checkedC"
+                                        control={<Checkbox id={'cbx'} color={'#FFC400'} checked={buttons.smartCompose}
+                                                           name="checkedC"
                                                            onChange={(e) => {
                                                                saveSmartComposeSettings('cbx').then(() => {
                                                                    setButtons({smartCompose: !buttons.smartCompose});

@@ -1,7 +1,7 @@
 import store from "store";
 
 let user_id;
-if (store.get('user') === null || undefined) {
+if (store.get('user') !== null || undefined) {
     console.warn('No User iD Defined');
     user_id = '';
     //    throw new Error('No User ID Defined');
