@@ -3,18 +3,10 @@ import del_save_list from "../del_save_list";
 import saveToDeviceFromServer from "../local/saveToDeviceFromServer";
 import ping from "../ping";
 import getFromServer from "../server/get-from-server";
+import {user_id} from './user_id';
 
-let user_id = '123456';
+
 const saveToServer = async () => {
-    function escapeH_S(unsafe) {
-        return unsafe
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/\\/g, "&#92;")
-            .replace(/'/g, "&#039;");
-    }
 
     let ajaxSave = async (data) => {
         let formData = new FormData();
@@ -70,7 +62,7 @@ const saveToServer = async () => {
 };
 
 const setUserID = async () => {
-//    null == localStorage.getItem("user") ? localStorage.setItem('user', JSON.stringify({user_id: '123456'})) : (()=>{});
+//    null == localStorage.getItem("user") ? localStorage.setItem('user', JSON.stringify({user_id: user_id})) : (()=>{});
 };
 export default function init(callback = () => {
 }) {

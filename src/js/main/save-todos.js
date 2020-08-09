@@ -1,7 +1,7 @@
 import {asyncLocalStorage} from '../asyncLocalStorage';
 import uniqid from "../utils/uniqid";
+import {user_id} from '../utils/init/user_id';
 
-let user_id = '123456';
 
 async function saveTodo(d, callback = ()=>{}) {
     function check_if_null(a) {

@@ -1,7 +1,5 @@
 import React from 'react';
-//import PropTypes from 'prop-types';
 import './Box.css';
-//import axios from 'axios';
 import Paper from '@material-ui/core/Paper';
 import getFromServer from "../../js/utils/server/get-from-server";
 import speak from "../../js/utils/speech/speak";
@@ -10,6 +8,7 @@ import {Delete, VolumeUp} from '@material-ui/icons';
 import {deleteNote} from "../../js/utils/server/delete-from-server";
 import {makeStyles} from "@material-ui/core/styles";
 import ContentEditable from "../ContentEditable/ContentEditable";
+import {user_id} from '../../js/utils/init/user_id';
 
 const useStyles = makeStyles((theme) => ({
     content: {
@@ -37,7 +36,7 @@ export class Box extends React.Component {
 
 
     delete_note(d) {
-        deleteNote(d.date, '123456', d.noteId);
+        deleteNote(d.date, user_id, d.noteId);
         document.getElementById(`note_${d.noteId}`).remove();
         //console.log(d.e.target.parentNode.parentNode.parentNode.parentNode.closest('.col-md-4').remove())
 //        document.querySelector(`#${d.noteId}`).remove();
@@ -63,7 +62,7 @@ export class Box extends React.Component {
     //   classes = useStyles();
     renderPosts = async () => {
         try {
-            let posts = await getFromServer('123456');
+            let posts = await getFromServer(user_id);
             //let posts = [{"date":"8\/3\/2020, 1:51:33 PM","content":"Registered Sex Offender","uniqid":"5f27d0158fdf3c","user_id":"123456"},{"date":"8\/3\/2020, 2:11:41 PM","content":"localStorage.getItem(&#039;draft&#039;)","uniqid":"5f27d4cdf74bc8","user_id":"123456"}];
             // this will re render the view with new data
             if (posts.length) {
@@ -95,7 +94,7 @@ export class Box extends React.Component {
                                     <div class="note-inner p-2 m-3 text-break" id={note.uniqid} onClick={() => {
                                     }}>
                                         <h4 class="note-heading text-break">{heading}</h4>
-                                        <div class="note-content text-break">{note.content}</div>
+                                        <div class="note-content text-break pb-3">{note.content}</div>
                                     </div>
 
                                 </Paper>

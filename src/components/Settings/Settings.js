@@ -7,7 +7,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import {ArrowBack, BubbleChart, Delete, Feedback, OpenInNew} from '@material-ui/icons';
+import {AccountCircle, ArrowBack, BubbleChart, Delete, Feedback, OpenInNew} from '@material-ui/icons';
 import Slide from '@material-ui/core/Slide';
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -18,6 +18,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FactoryResetDialogDemo from "./FactoryResetDialog";
 import Divider from "@material-ui/core/Divider";
 import {useSnackbar} from 'notistack';
+import store from "store";
+import Redirect from "react-router-dom/es/Redirect";
 
 
 const theme_ = createMuiTheme({
@@ -93,8 +95,17 @@ export default function SettingsComponent(props) {
         console.log(v)
     };
 
+    function IsLoggedIn() {
+        if (!store.get('loggedIn')) {
+            return <Redirect to={'/login'}/>;
+        } else {
+            return <div/>;
+        }
+    }
+
     return (
         <div>
+            <IsLoggedIn/>
             <AppBar className={classes.appBar} color={"primary"}>
                 <Toolbar color={'primary'}>
                     <IconButton component={'Link'} to={'/'} edge="start" color="inherit" onClick={handleClose}
@@ -110,6 +121,17 @@ export default function SettingsComponent(props) {
                 <div class="row">
                     <div class="col-md-12 px-0">
                         <List subheader={<ListSubheader>General</ListSubheader>} className={classes.root}>
+                            <ListItem>
+                                <ListItemIcon>
+                                    <AccountCircle/>
+                                </ListItemIcon>
+                                <ListItemText id="switch-list-label-bluetooth" primary="Account"/>
+                                <ListItemSecondaryAction>
+                                    <IconButton component={'Link'} to={'/account'}>
+                                        <OpenInNew/>
+                                    </IconButton>
+                                </ListItemSecondaryAction>
+                            </ListItem>
                             <ListItem>
                                 <ListItemIcon>
                                     <BubbleChart/>

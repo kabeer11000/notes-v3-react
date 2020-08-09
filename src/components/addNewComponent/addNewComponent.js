@@ -129,9 +129,9 @@ export default function FullScreenDialog() {
         if (note_s.textarea.length) {
             saveNote(new Date().toLocaleString(), noteContentJSON, () => {
                 console.log('Fuck u donna');
-                handleClickOpen(false);
-                enqueueSnackbar('Note Saved!');
             });
+            enqueueSnackbar('Note Saved!');
+            handleClickOpen(false);
         }else{
             console.log('Empty Note Discarded');
             handleClickOpen(false);

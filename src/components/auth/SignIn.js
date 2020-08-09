@@ -3,14 +3,15 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import store from 'store';
+import SignInBackEnd from "../../js/api/auth/SignIn";
+import Redirect from "react-router-dom/es/Redirect";
 
 function Copyright() {
     return (
@@ -47,9 +48,34 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
     const classes = useStyles();
+    const [user, setUser] = React.useState({username: '', password: '', loggedIn: false, error: false});
+
+    function Submit(e) {
+        e.preventDefault();
+
+        setUser({error: false});
+        SignInBackEnd({user}).then((v) => {
+            if (v.status) {
+                console.log("you're logged in. yay!");
+                store.set('loggedIn', true);
+                setUser({loggedIn: true});
+                store.set('user', v.user);
+            }
+        });
+
+    }
+
+    function IsLoggedIn() {
+        if (user.loggedIn || store.get('loggedIn')) {
+            return <Redirect to={'/'}/>;
+        } else {
+            return <div/>;
+        }
+    }
 
     return (
         <Container component="main" maxWidth="xs">
+            <IsLoggedIn/>
             <CssBaseline/>
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
@@ -58,7 +84,7 @@ export default function SignIn() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <form className={classes.form} noValidate method={'post'} action={''}>
+                <form className={classes.form} onSubmit={Submit}>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -69,6 +95,9 @@ export default function SignIn() {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        defaultValue={'Email'}
+                        value={user.username}
+                        onChange={e => setUser({username: e.currentTarget.value})}
                     />
                     <TextField
                         variant="outlined"
@@ -79,11 +108,9 @@ export default function SignIn() {
                         label="Password"
                         type="password"
                         id="password"
+                        value={user.password}
+                        onChange={e => setUser({password: e.currentTarget.value})}
                         autoComplete="current-password"
-                    />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary"/>}
-                        label="Remember me"
                     />
                     <Button
                         type="submit"
@@ -101,7 +128,7 @@ export default function SignIn() {
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link to={'/signup'} variant="body2">
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>
@@ -114,3 +141,10 @@ export default function SignIn() {
         </Container>
     );
 }
+/*
+                   <FormControlLabel
+                        control={<Checkbox value="remember" color="primary"/>}
+                        label="Remember me"
+                    />
+
+ */

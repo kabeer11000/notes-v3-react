@@ -2,14 +2,15 @@
   "name": "notes",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/notes/react/",
+  "homepage": "/",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "notistack": "^0.9.17",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "store": "^2.0.12"
   },
   "scripts": {
     "start": "react-scripts start",

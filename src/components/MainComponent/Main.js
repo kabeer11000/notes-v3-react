@@ -11,7 +11,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MailIcon from '@material-ui/icons/Mail';
 import Typography from '@material-ui/core/Typography';
-import {createMuiTheme, makeStyles, MuiThemeProvider, useTheme} from '@material-ui/core/styles';
+import {makeStyles, useTheme} from '@material-ui/core/styles';
 import Box from "../Box/Box";
 import FullScreenDialog from "../addNewComponent/addNewComponent";
 import CustomizedInputBase from "../searchbar/searchbar";
@@ -25,21 +25,10 @@ import Slide from "@material-ui/core/Slide";
 import init from "../../js/utils/init/init";
 import Drawer from "@material-ui/core/Drawer";
 import {Link} from "react-router-dom";
+import store from "store";
+import Redirect from "react-router-dom/es/Redirect";
 
 const drawerWidth = 240;
-const theme_ = createMuiTheme({
-    palette: {
-        primary: {
-            contrastText: '#FFF',
-            main: '#FFC400',
-            light: '#FFFFFF',
-            dark: '#FFFFFF',
-        },
-        secondary: {
-            main: '#FFFFFF',
-        }
-    }
-});
 init(() => {
 });
 const useStyles = makeStyles((theme) => ({
@@ -191,9 +180,18 @@ function MainComponent(props) {
         }
     }
 
+    function IsLoggedIn() {
+        if (!store.get('loggedIn')) {
+            return <Redirect to={'/login'}/>;
+        } else {
+            return <div/>;
+        }
+    }
+
     return (
 
-        <MuiThemeProvider theme={theme_}>
+        <div>
+            <IsLoggedIn/>
             <div className={classes.root}>
                 <CssBaseline/>
                 <CustomizedInputBase context_={BNav_value} appBarPos={"fixed"} class_={classes.appBar}
@@ -244,7 +242,7 @@ function MainComponent(props) {
                     </HideOnScroll>
                 </main>
             </div>
-        </MuiThemeProvider>
+        </div>
     );
 }
 

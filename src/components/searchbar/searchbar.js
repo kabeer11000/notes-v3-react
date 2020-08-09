@@ -21,6 +21,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import getTodos from "../../js/main/get-todos";
 import deleteTodo from "../../js/main/delete-todo";
+import store from "store";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -258,6 +259,19 @@ export default function CustomizedInputBase(props) {
     const popover_handleClose = () => {
         popover_setAnchorEl(null);
     };
+    const UserPopup = () => {
+        let html = '';
+        if (store.get('user') != null || undefined) {
+            const user__ = store.get('user');
+            html = <div><Typography variant={'h6'} className={'my-1'}>{user__.username}</Typography>
+                <Typography variant={'p'} muted
+                            className={'my-1 text-muted'}>{user__.email}</Typography>
+                <Divider className={'my-3'}/>
+                <Button variant={'outlined'} className={'btn my-3'}><small>SIGN OUT</small></Button></div>;
+
+        }
+        return html;
+    };
 
     const popover_open = Boolean(popover_anchorEl);
     const popover_id = popover_open ? 'simple-popover' : undefined;
@@ -297,11 +311,7 @@ export default function CustomizedInputBase(props) {
                             >
                                 <Paper className={'text-center w-100 p-3'}>
                                     <AccountCircle/>
-                                    <Typography variant={'h6'} className={'my-1'}>Kabeer Jaffri</Typography>
-                                    <Typography variant={'p'} muted
-                                                className={'my-1 text-muted'}>Kabeer11000@gmail.com</Typography>
-                                    <Divider className={'my-3'}/>
-                                    <Button variant={'outlined'} className={'btn my-3'}><small>SIGN OUT</small></Button>
+                                    <UserPopup/>
                                 </Paper>
                             </Popover>
                         </Paper>

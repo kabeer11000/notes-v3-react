@@ -1,12 +1,12 @@
 import ping from '../ping';
 import getNotesFromLocalStorage from "../local/getNotesFromLocalStorage";
-import fetch from "../fetchWithTimeout";
+//import fetch from "../fetchWithTimeout";
 
 let getFromServer = async (user_id) => {
     let notes = [];
 
     async function ajaxGetNotes() {
-        await fetch("https://hosted-kabeersnetwork.000webhostapp.com/notes/server/alternate/getnotes.php?user_id=" + user_id, {}, 5000)
+        await fetch("https://hosted-kabeersnetwork.000webhostapp.com/notes/server/alternate/getnotes.php?user_id=" + user_id,)
             .then(res => {
                 if (res.ok) {
                     return res.json();
@@ -22,7 +22,7 @@ let getFromServer = async (user_id) => {
                     })
                 }
             }).catch(() => {
-                notes = getNotesFromLocalStorage()
+                notes = getNotesFromLocalStorage();
             });
         return notes.reverse();
     }
@@ -32,6 +32,5 @@ let getFromServer = async (user_id) => {
     } else {
         return await ajaxGetNotes();
     }
-//    !await ping() ? (callback(await getNotesFromLocalStorage()), console.warn('Cannot Fetch No Connection')) : (callback(await ajaxGetNotes()));
 };
 export default getFromServer;
