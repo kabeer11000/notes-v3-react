@@ -23,6 +23,7 @@ import getTodos from "../../js/main/get-todos";
 import deleteTodo from "../../js/main/delete-todo";
 import store from "store";
 import SignOut from "../../js/api/auth/SignOut";
+import timeAgo from "../../js/utils/ui/timeago";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -158,7 +159,7 @@ export default function CustomizedInputBase(props) {
                                     <div className="note-inner p-2 m-3 text-break" id={note.uniqid} onClick={() => {
                                     }}>
                                         <h4 className="note-heading text-break">{heading}</h4>
-                                        <div className="note-content text-break">{note.content}</div>
+                                        <div className="note-content text-break pb-3">{note.content}</div>
                                     </div>
 
                                 </Paper>
@@ -170,7 +171,7 @@ export default function CustomizedInputBase(props) {
                                 <Paper className={"col-md-4 mb-3 mr-2 ml-1 text-body p-0 text-break " + note.uniqid}>
                                     <p className="header d-flex p-0 justify-content-around">
                                         <span className="d-none id">{note.uniqid}</span>
-                                        <span className="date p-3">{note.date.toString()}</span>
+                                        <span className="date p-3">{timeAgo(note.date)}</span>
                                         <IconButton onClick={() => {
                                             listen_note(note.title + '\n' + note.body)
                                         }} color={'primary'}>
@@ -185,7 +186,7 @@ export default function CustomizedInputBase(props) {
                                     <div className="note-inner p-2 m-3 text-break" id={note.uniqid} onClick={() => {
                                     }}>
                                         <h4 className="note-heading text-break">{note.title}</h4>
-                                        <div className="note-content text-break">{note.body}</div>
+                                        <div className="note-content text-break pb-3">{note.body}</div>
                                     </div>
 
                                 </Paper>
@@ -327,7 +328,7 @@ export default function CustomizedInputBase(props) {
             </HideOnScroll>
             <Dialog fullScreen open={modal_open} onClose={() => {
             }}>
-                <AppBar color={toolbar_color} className={classes.appBar}>
+                <AppBar color={toolbar_color} className={`${classes.appBar} fixed-top`}>
                     <Toolbar>
                         <IconButton onClick={() => {
                             modal_Close();
@@ -351,7 +352,7 @@ export default function CustomizedInputBase(props) {
                         <Search visibility={search_icon}/>
                     </Toolbar>
                 </AppBar>
-                <div class="container " style={{marginTop: "5.25rem"}} id={'search_res_container'}>
+                <div class="container px-3" style={{marginTop: "5.25rem"}} id={'search_res_container'}>
                     <div class="row">
                         {search_val}
                     </div>
