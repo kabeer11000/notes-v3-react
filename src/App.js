@@ -10,6 +10,7 @@ import {SnackbarProvider} from "notistack";
 import AccountPage from "./components/AccountPage/AccountPage";
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
 import {DialogProvider} from 'muibox'
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 const theme_ = createMuiTheme({
     palette: {
@@ -34,9 +35,9 @@ function App(props) {
                         <Switch>
                             <Route path={'/login'} component={SignIn}/>
                             <Route path={'/signup'} component={SignUp}/>
-                            <Route path={'/settings'} component={SettingsComponent}/>
-                            <Route path={'/account'} component={AccountPage}/>
-                            <Route path={'/'} component={MainComponent}/>
+                            <PrivateRoute path="/settings" component={SettingsComponent}/>
+                            <PrivateRoute path="/account" component={AccountPage}/>
+                            <PrivateRoute path="/" component={MainComponent}/>
                         </Switch>
                     </Router>
                 </DialogProvider>

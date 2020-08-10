@@ -66,7 +66,7 @@ export default function SignIn() {
     }
 
     function IsLoggedIn() {
-        if (user.loggedIn || store.get('loggedIn')) {
+        if (user.loggedIn && store.get('user') !== null) {
             return <Redirect to={'/'}/>;
         } else {
             return <div/>;
