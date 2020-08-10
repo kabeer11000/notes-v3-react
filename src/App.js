@@ -9,6 +9,7 @@ import './serviceWorker';
 import {SnackbarProvider} from "notistack";
 import AccountPage from "./components/AccountPage/AccountPage";
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
+import {DialogProvider} from 'muibox'
 
 const theme_ = createMuiTheme({
     palette: {
@@ -26,19 +27,19 @@ const theme_ = createMuiTheme({
 
 function App(props) {
     return (
-
         <SnackbarProvider maxSnack={1}>
-
             <MuiThemeProvider theme={theme_}>
-                <Router>
-                    <Switch>
-                        <Route path={'/login'} component={SignIn}/>
-                        <Route path={'/signup'} component={SignUp}/>
-                        <Route path={'/settings'} component={SettingsComponent}/>
-                        <Route path={'/account'} component={AccountPage}/>
-                        <Route path={'/'} component={MainComponent}/>
-                    </Switch>
-                </Router>
+                <DialogProvider>
+                    <Router>
+                        <Switch>
+                            <Route path={'/login'} component={SignIn}/>
+                            <Route path={'/signup'} component={SignUp}/>
+                            <Route path={'/settings'} component={SettingsComponent}/>
+                            <Route path={'/account'} component={AccountPage}/>
+                            <Route path={'/'} component={MainComponent}/>
+                        </Switch>
+                    </Router>
+                </DialogProvider>
             </MuiThemeProvider>
         </SnackbarProvider>
     );

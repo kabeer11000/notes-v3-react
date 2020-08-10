@@ -1,6 +1,6 @@
 import ping from '../ping';
 import getNotesFromLocalStorage from "../local/getNotesFromLocalStorage";
-//import fetch from "../fetchWithTimeout";
+import fetch from "../fetchWithTimeout";
 
 let getFromServer = async (user_id) => {
     let notes = [];

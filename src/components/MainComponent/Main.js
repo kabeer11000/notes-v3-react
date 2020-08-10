@@ -27,6 +27,7 @@ import Drawer from "@material-ui/core/Drawer";
 import {Link} from "react-router-dom";
 import store from "store";
 import Redirect from "react-router-dom/es/Redirect";
+import ReactPullToRefresh from "react-pull-to-refresh/lib/components/ReactPullToRefresh";
 
 const drawerWidth = 240;
 init(() => {
@@ -230,7 +231,9 @@ function MainComponent(props) {
                 </nav>
                 <main className={classes.content}>
                     <div className={classes.toolbar}/>
-                    <Render_m v={!!+BNav_value} refresh={Refresh_}/>
+                    <ReactPullToRefresh>
+                        <Render_m v={!!+BNav_value} refresh={Refresh_}/>
+                    </ReactPullToRefresh>
                     <HideOnScroll {...props}>
                         <AppBar color="primary"
                                 style={{position: 'fixed', top: "auto", bottom: 0, width: '100%',}} component={'div'}>

@@ -100,3 +100,28 @@
         transform: rotate(450deg);
     }
 }
+
+.view-note {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+#simple-dialog, #simple-dialog-title1 {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+.View-Dialog30 {
+    width: 100% !important;
+}
+
+div[aria-labelledby="simple-dialog-title"] {
+    margin-left: 1.5rem !important;
+    margin-right: 1.5rem !important;
+}
+
+div[aria-labelledby="simple-dialog-title"], div[aria-labelledby="simple-dialog-title"] .MuiDialogContent-root {
+    width: 100% !important;
+}
