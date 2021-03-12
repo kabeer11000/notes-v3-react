@@ -13,7 +13,8 @@
     "react-scripts": "3.4.1",
     "store": "^2.0.12",
     "react-router-dom":"latest",
-    "react-pull-to-refresh":"latest"
+    "react-pull-to-refresh":"latest",
+    "fuse.js":"latest"
   },
   "scripts": {
     "start": "react-scripts start",
