@@ -10,7 +10,7 @@
     "notistack": "^0.9.17",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1",
+    "react-scripts": "5.0.1",
     "store": "^2.0.12",
     "react-router-dom":"latest",
     "react-pull-to-refresh":"latest",
@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "prop-types": "^15.7.2",
-    "surge": "^0.21.6",
+    "surge": "^0.24.6",
     "sw-precache": "^4.2.2"
   }
 }
